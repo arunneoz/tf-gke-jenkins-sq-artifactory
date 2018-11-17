@@ -76,8 +76,8 @@ resource "null_resource" "install_istio" {
       helm init --upgrade --service-account tiller --wait
 
       kubectl create ns istio-system || true
-      kubectl apply -f istio-1.0.0/install/kubernetes/helm/istio/templates/crds.yaml || true
-      helm install istio-1.0.0/install/kubernetes/helm/istio --name istio --namespace istio-system \
+      kubectl apply -f ../istio-1.0.0/install/kubernetes/helm/istio/templates/crds.yaml || true
+      helm install ../istio-1.0.0/install/kubernetes/helm/istio --name istio --namespace istio-system \
          --set grafana.enabled=true \
          --set servicegraph.enabled=true \
          --set tracing.enabled=true \
@@ -88,7 +88,7 @@ resource "null_resource" "install_istio" {
      helm install   stable/spinnaker --name spinnaker --wait \
          --namespace spinnaker \
          --timeout 1200 \
-         --values spinnaker_values.yaml \
+         --values ../spinnaker_values.yaml
     EOT
 
     environment {
