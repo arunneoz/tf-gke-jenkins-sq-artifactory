@@ -36,7 +36,7 @@ gcloud iam service-accounts keys create $GCS_SA_DEST \
 ## Step 2 Clone the Repo and download the istio version
 
 ```
- git clone https://github.com/arunneoz/terraform-gke-istio
+ git clone https://github.com/arunneoz/terraform-gke-istio.git
 
  cd terraform-gke-istio
  
