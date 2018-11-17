@@ -77,9 +77,10 @@ resource "null_resource" "install_istio" {
 
       kubectl create ns istio-system || true
       kubectl apply -f ../istio-1.0.0/install/kubernetes/helm/istio/templates/crds.yaml || true
-      helm install ../istio-1.0.0/install/kubernetes/helm/istio --name istio --namespace istio-system \
+      helm install ../istio-1.0.0/install/kubernetes/helm/istio --name istio --namespace istio-system  --wait \
          --set grafana.enabled=true \
          --set servicegraph.enabled=true \
+         --timeout 1200 \
          --set tracing.enabled=true \
          --set kiali.enabled=true
 
