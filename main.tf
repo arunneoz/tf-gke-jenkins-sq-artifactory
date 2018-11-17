@@ -76,18 +76,15 @@ resource "null_resource" "install_istio" {
       helm init --upgrade --service-account tiller --wait
 
       kubectl create ns istio-system || true
-      helm install istio-1.0.0/install/kubernetes/helm/istio \ # use Helm Chart
-        --name istio \ # name install 'istio'
-        --tls \ # install using TLS
-        --namespace istio-system \ # set the namespace
-        --set global.mtls.enabled=true \ # enable MTLS
-        --set grafana.enabled=true \ # enable Grafana
-        --set servicegraph.enabled=true \ # enable ServiceGraph
-        --set tracing.enabled=true \ # enable Tracing
-        --set kiali.enabled=true # enable Kiali
-
+      kubectl apply -f istio-1.0.0/install/kubernetes/helm/istio/templates/crds.yaml || true
+      helm install istio-1.0.0/install/kubernetes/helm/istio --name istio --namespace istio-system \
+         --set grafana.enabled=true \
+         --set servicegraph.enabled=true \
+         --set tracing.enabled=true \
+         --set kiali.enabled=true
 
      kubectl create ns spinnaker || true
+     kubectl create secret generic --from-file=$HOME/.kube/config my-kubeconfig || true
      helm install   stable/spinnaker --name spinnaker --wait \
          --namespace spinnaker \
          --timeout 1200 \
