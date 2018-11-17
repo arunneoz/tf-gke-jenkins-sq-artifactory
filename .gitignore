@@ -11,4 +11,4 @@
 # .tfvars files
 *.tfvars
 
-svc-account.json
+svc-account.jsonspinnaker_values.yaml
