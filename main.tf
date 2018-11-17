@@ -75,13 +75,23 @@ resource "null_resource" "install_istio" {
       kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller || true
       helm init --upgrade --service-account tiller --wait
 
-      helm repo add kubernetes-istio-module $${HELM_REPO}
-      helm repo update
-
       kubectl create ns istio-system || true
-      helm upgrade istio kubernetes-istio-module/istio --install --wait \
-          --namespace istio-system \
-          --version $${ISTIO_VERSION}
+      helm install istio-1.0.0/install/kubernetes/helm/istio \ # use Helm Chart
+        --name istio \ # name install 'istio'
+        --tls \ # install using TLS
+        --namespace istio-system \ # set the namespace
+        --set global.mtls.enabled=true \ # enable MTLS
+        --set grafana.enabled=true \ # enable Grafana
+        --set servicegraph.enabled=true \ # enable ServiceGraph
+        --set tracing.enabled=true \ # enable Tracing
+        --set kiali.enabled=true # enable Kiali
+
+
+     kubectl create ns spinnaker || true
+     helm install   stable/spinnaker --name spinnaker --wait \
+         --namespace spinnaker \
+         --timeout 1200 \
+         --values spinnaker_values.yaml \
     EOT
 
     environment {
