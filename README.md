@@ -21,7 +21,7 @@ gcloud projects add-iam-policy-binding $GCP_PROJECT \
     --member serviceAccount:$GCS_SA_EMAIL \
     --role roles/browser
     
-GCS_SA_DEST=~/.gcp/gcp.json
+GCS_SA_DEST=gcp.json
 
 mkdir -p $(dirname $GCS_SA_DEST)
 
@@ -35,20 +35,31 @@ gcloud iam service-accounts keys create $GCS_SA_DEST \
 
 ## Step 2 Clone the Repo and download the istio version
 
-``` $ git clone https://github.com/arunneoz/terraform-gke-istio
+```
+ git clone https://github.com/arunneoz/terraform-gke-istio
 
-    $ cd terraform-gke-istio
+ cd terraform-gke-istio
+ 
+ replace the jsonKey and password with downloaded gcp.json contents in the Step 1 in spinnaker_values.yaml
     
-    $ export ISTIO_VERSION=1.0.0
+ export ISTIO_VERSION=1.0.0
     
-    $ curl -L https://git.io/getLatestIstio | ISTIO_VERSION=${ISTIO_VERSION} sh
+ curl -L https://git.io/getLatestIstio | ISTIO_VERSION=${ISTIO_VERSION} sh
     
  ```
 
-## Usage
+## Step 3 Setting up Terraform
+
 ```
+
+mkdir gkeistiospininstall
+
+cd gkeistiospininstall
+
+vi main.tf and paste the following contents
+
 module "k8s_cluster" {
-  source = "github.com/richardalberto/terraform-google-kubernetes-istio"
+  source = "github.com/arunneoz/terraform-gke-istio"
 
   gcp_project = "google-project-id"
   gcp_region  = "us-east4"
@@ -59,6 +70,12 @@ module "k8s_cluster" {
   master_username = "admin"
   master_password = "this_is_a_pretty_long_password_we_will_should_change!"
 
-  helm_repository = "https://chart-repo.storage.googleapis.com"
+  helm_repository = "https://<gcs_bucket>.storage.googleapis.com"
 }
+
+terraform init
+terraform plan -out gke_istio_spin.plan
+terraform apply "gke_istio_spin.plan"
+
+
 ```
