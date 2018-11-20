@@ -57,7 +57,7 @@ resource "google_container_node_pool" "gke_node_pool" {
   }
 }
 
-resource "null_resource" "install_istio" {
+resource "null_resource" "install_jenkins_sonarcube" {
   triggers {
     cluster_ep = "${google_container_cluster.gke_cluster.endpoint}"
   }
@@ -76,9 +76,10 @@ resource "null_resource" "install_istio" {
       helm init --upgrade --service-account tiller --wait
 
       kubectl create ns cicd || true
-      helm install -n cicd stable/jenkins --wait \
+      helm install  stable/jenkins --wait \
          --values ../jenkins_values.yaml \
-         --name jenkins
+         --name jenkins \
+         --namespace cicd
 
       helm install   stable/sonarqube --name sonarqube --wait \
          --namespace cicd
