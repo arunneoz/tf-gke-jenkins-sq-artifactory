@@ -82,7 +82,7 @@ resource "null_resource" "install_jenkins_sonarcube" {
       helm install  stable/jenkins --wait \
          --values ../jenkins_values.yaml \
          --name jenkins \
-         --version 0.16.6
+         --version 0.16.6 \
          --namespace cicd
 
       helm install   stable/sonarqube --name sonarqube --wait \
