@@ -51,6 +51,9 @@ resource "google_container_node_pool" "gke_node_pool" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/compute",
       "https://www.googleapis.com/auth/devstorage.read_only",
+      "https://www.googleapis.com/auth/projecthosting,
+      "https://www.googleapis.com/auth/storage-rw",
+      "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/logging.write",
       "https://www.googleapis.com/auth/monitoring",
     ]
@@ -79,6 +82,7 @@ resource "null_resource" "install_jenkins_sonarcube" {
       helm install  stable/jenkins --wait \
          --values ../jenkins_values.yaml \
          --name jenkins \
+         --version 0.16.6
          --namespace cicd
 
       helm install   stable/sonarqube --name sonarqube --wait \
