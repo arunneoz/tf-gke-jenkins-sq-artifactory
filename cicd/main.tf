@@ -1,7 +1,7 @@
 module "k8s_cluster" {
   source = "github.com/arunneoz/tf-gke-jenkins-sq-artifactory"
 
-  gcp_project = "inbound-rune-iiot"
+  gcp_project = "inbound-rune-cicdtaw"
   gcp_region  = "us-east4"
   master_version  = "1.10.9-gke.5"
   cluster_name    = "gke-cluster"
