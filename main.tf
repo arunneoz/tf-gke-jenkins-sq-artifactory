@@ -21,6 +21,7 @@ resource "google_container_cluster" "gke_cluster" {
   name               = "${var.cluster_name}"
   region             = "${var.gcp_region}"
   min_master_version = "${var.master_version}"
+  initial_node_count = 3
 
   master_auth {
     username = "${var.master_username}"
@@ -40,10 +41,6 @@ resource "google_container_cluster" "gke_cluster" {
       "https://www.googleapis.com/auth/logging.write",
       "https://www.googleapis.com/auth/monitoring",
     ]
-  }
-
-  node_pool {
-    name = "default-pool"
   }
 
 }
