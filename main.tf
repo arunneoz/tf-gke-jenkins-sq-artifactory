@@ -42,6 +42,10 @@ resource "google_container_cluster" "gke_cluster" {
     ]
   }
 
+  node_pool {
+    name = "default-pool"
+  }
+
 }
 
 resource "google_container_node_pool" "gke_node_pool" {
