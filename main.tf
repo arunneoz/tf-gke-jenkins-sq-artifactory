@@ -31,22 +31,6 @@ resource "google_container_cluster" "gke_cluster" {
     ignore_changes = ["node_pool"]
   }
 
-  node_pool {
-    name = "default-pool"
-  }
-}
-
-resource "google_container_node_pool" "gke_node_pool" {
-  name       = "${var.cluster_name}-pool"
-  region     = "${var.gcp_region}"
-  cluster    = "${google_container_cluster.gke_cluster.name}"
-  node_count = "${var.min_node_count}"
-
-  autoscaling {
-    min_node_count = "${var.min_node_count}"
-    max_node_count = "${var.max_node_count}"
-  }
-
   node_config {
     oauth_scopes = [
       "https://www.googleapis.com/auth/compute",
@@ -57,7 +41,20 @@ resource "google_container_node_pool" "gke_node_pool" {
       "https://www.googleapis.com/auth/monitoring",
     ]
   }
+
+  node_pool {
+    name = "default-pool"
+    region     = "${var.gcp_region}"
+    cluster    = "${google_container_cluster.gke_cluster.name}"
+    node_count = "${var.min_node_count}"
+
+    autoscaling {
+      min_node_count = "${var.min_node_count}"
+      max_node_count = "${var.max_node_count}"
+    }
+  }
 }
+
 
 resource "null_resource" "install_jenkins_sonarcube" {
   triggers {
