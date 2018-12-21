@@ -102,5 +102,5 @@ resource "null_resource" "install_jenkins_sonarcube" {
     }
   }
 
-  depends_on = ["google_container_cluster.gke_cluster"]
+  depends_on = ["google_container_cluster"]
 }
