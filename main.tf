@@ -51,7 +51,7 @@ resource "google_container_node_pool" "gke_node_pool" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/compute",
       "https://www.googleapis.com/auth/projecthosting",
-      "https://www.googleapis.com/auth/devstorage.read_write",
+      "https://www.googleapis.com/auth/storage-rw",
       "https://www.googleapis.com/auth/cloud-platform",
       "https://www.googleapis.com/auth/logging.write",
       "https://www.googleapis.com/auth/monitoring",
@@ -77,6 +77,8 @@ resource "null_resource" "install_jenkins_sonarcube" {
       kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller || true
       helm init --upgrade --service-account tiller --wait
 
+      helm repo add jfrog https://charts.jfrog.io
+
       kubectl create ns cicd || true
       helm install  stable/jenkins --wait \
          --values ../jenkins_values.yaml \
@@ -86,6 +88,10 @@ resource "null_resource" "install_jenkins_sonarcube" {
 
       helm install   stable/sonarqube --name sonarqube --wait \
          --namespace cicd
+
+      helm install --name artifactory --set artifactory.image.repository=docker.bintray.io/jfrog/artifactory-oss stable/artifactory \
+         --namespace cicd \
+         --wait
 
     EOT
 

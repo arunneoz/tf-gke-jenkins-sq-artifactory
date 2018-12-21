@@ -1,14 +1,16 @@
 Master:
   InstallPlugins:
-    - kubernetes:1.12.6
+    - kubernetes:1.13.5
     - workflow-job:2.24
-    - blueocean:1.5.0
+    - blueocean:1.9.0
     - slack:2.3
-    - workflow-aggregator:2.5
-    - credentials-binding:1.16
+    - workflow-aggregator:2.6
+    - credentials-binding:1.17
     - git:3.9.1
     - google-oauth-plugin:0.6
     - google-source-plugin:0.3
+    - google-container-registry-auth:0.2
+    - test-results-analyzer:0.3.5
   ServiceType: ClusterIP
 Agent:
   Enabled: true

@@ -1,0 +1,20 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority: ca.crt
+    server: https://35.199.45.170
+  name: k8s
+contexts:
+- context:
+    cluster: k8s
+    namespace: default
+    user: admin
+  name: k8s-ci
+current-context: k8s-ci
+kind: Config
+preferences: {}
+users:
+- name: admin
+  user:
+    password: this_is_a_pretty_long_password_we_will_should_change!
+    username: admin
