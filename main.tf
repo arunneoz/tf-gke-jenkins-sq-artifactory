@@ -1,5 +1,5 @@
 provider "google" {
-  version = "~> 1.17"
+  version = "~> 1.19"
 
   project = "${var.gcp_project}"
   region  = "${var.gcp_region}"
@@ -21,7 +21,9 @@ resource "google_container_cluster" "gke_cluster" {
   name               = "${var.cluster_name}"
   region             = "${var.gcp_region}"
   min_master_version = "${var.master_version}"
-  initial_node_count = 3
+  initial_node_count = 1
+  enable_binary_authorization = true
+  remove_default_node_pool= true
 
   master_auth {
     username = "${var.master_username}"
@@ -45,7 +47,7 @@ resource "google_container_cluster" "gke_cluster" {
 
 }
 
-resource "google_container_node_pool" "gke_node_pool" {
+resource "google_container_node_pool" "gke_cluster_pool" {
   name       = "${var.cluster_name}-pool"
   region     = "${var.gcp_region}"
   cluster    = "${google_container_cluster.gke_cluster.name}"
@@ -89,9 +91,6 @@ resource "null_resource" "install_jenkins_sonarcube" {
       helm install   stable/sonarqube --name sonarqube --wait \
          --namespace cicd
 
-      helm install --name artifactory --set artifactory.image.repository=docker.bintray.io/jfrog/artifactory-oss stable/artifactory \
-         --namespace cicd \
-         --wait
 
     EOT
 
@@ -105,5 +104,5 @@ resource "null_resource" "install_jenkins_sonarcube" {
     }
   }
 
-  depends_on = ["google_container_node_pool.gke_node_pool"]
+  depends_on = ["google_container_node_pool.gke_cluster_pool"]
 }
