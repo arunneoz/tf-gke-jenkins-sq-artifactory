@@ -11,5 +11,5 @@ module "k8s_cluster" {
   master_username = "admin"
   master_password = "this_is_a_pretty_long_password_we_will_should_change!"
 
-  helm_repository = "https://storage.googleapis.com/istio-prerelease/daily-build/master-latest-daily/charts"
+
 }
